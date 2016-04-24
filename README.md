@@ -1,4 +1,4 @@
-# Questie - A Vanilla World of Warcraft 1.12.1 QuestHelper
+# Questie2 - A quest helper for World of Warcraft (1.12.1) - Vanilla
 
 #<a href="https://github.com/AeroScripts/QuestieDev/releases">Download HERE</a>
 After weeks of additional development, Questie v2.0 is finally out. We are steadily approaching 400 commits and gained a third developer since then.
