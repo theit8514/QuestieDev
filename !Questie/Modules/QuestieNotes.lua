@@ -16,6 +16,7 @@ QUESTIE_NOTES_MAP_ICON_SCALE = 1.2;-- Zone
 QUESTIE_NOTES_WORLD_MAP_ICON_SCALE = 0.75;--Full world shown
 QUESTIE_NOTES_CONTINENT_ICON_SCALE = 1;--Continent Shown
 QUESTIE_NOTES_MINIMAP_ICON_SCALE = 1.0;
+QUESTIE_NOTES_CLUSTERMUL_HACK = 28; -- higher values = more notes on the map
 QuestieUsedNoteFrames = {};
 QuestieHandledQuests = {};
 QuestieCachedMonstersAndObjects = {};
@@ -28,6 +29,9 @@ local QSelect_QuestLogEntry = SelectQuestLogEntry;
 local QGet_QuestLogLeaderBoard = GetQuestLogLeaderBoard;
 local QGet_QuestLogQuestText = GetQuestLogQuestText;
 local QGet_TitleText = GetTitleText;
+
+-- temporary fix for map clutter, the clustering code should be backported eventually as its probably a superior solution
+local MapCache_ClutterFix = {};
 
 ---------------------------------------------------------------------------------------------------
 -- Updates all icons' scale
@@ -59,16 +63,26 @@ function Questie:AddQuestToMap(questHash, redraw)
 			for k, location in pairs(locations) do
 				--This checks if just THIS objective is done (Data is not super efficient but it's nil unless set so...)
 				if not location.done then
-					local MapInfo = Questie:GetMapInfoFromID(location.mapid);
-					if MapInfo then
-						local notehandle = {};
-						notehandle.c = MapInfo[4];
-						notehandle.z = MapInfo[5];
-						Questie:AddNoteToMap(MapInfo[4], MapInfo[5], location.x, location.y, location.type, questHash, location.objectiveid);
-						if not UsedContinents[MapInfo[4]] and not UsedZones[MapInfo[5]] then
-							UsedContinents[MapInfo[4]] = true;
-							UsedZones[MapInfo[5]] = true;
-							table.insert(ques["noteHandles"], notehandle);
+					if not MapCache_ClutterFix[location.mapid] then MapCache_ClutterFix[location.mapid] = {}; end
+					local xcell = math.floor((location.x*QUESTIE_NOTES_CLUSTERMUL_HACK));
+					local ycell = math.floor((location.x*QUESTIE_NOTES_CLUSTERMUL_HACK));
+					if not MapCache_ClutterFix[location.mapid][xcell] then MapCache_ClutterFix[location.mapid][xcell] = {}; end
+					if not MapCache_ClutterFix[location.mapid][xcell][ycell] then MapCache_ClutterFix[location.mapid][xcell][ycell] = {}; end
+					--DEFAULT_CHAT_FRAME:AddMessage(" loc " .. location.x);
+					--
+					if not MapCache_ClutterFix[location.mapid][xcell][ycell][name] then
+						local MapInfo = Questie:GetMapInfoFromID(location.mapid);
+						if MapInfo then
+							local notehandle = {};
+							notehandle.c = MapInfo[4];
+							notehandle.z = MapInfo[5];
+							Questie:AddNoteToMap(MapInfo[4], MapInfo[5], location.x, location.y, location.type, questHash, location.objectiveid);
+							if not UsedContinents[MapInfo[4]] and not UsedZones[MapInfo[5]] then
+								UsedContinents[MapInfo[4]] = true;
+								UsedZones[MapInfo[5]] = true;
+								table.insert(ques["noteHandles"], notehandle);
+							end
+							MapCache_ClutterFix[location.mapid][xcell][ycell][name] = true;
 						end
 					end
 				end
