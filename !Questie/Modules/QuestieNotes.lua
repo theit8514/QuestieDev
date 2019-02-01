@@ -16,7 +16,7 @@ QUESTIE_NOTES_MAP_ICON_SCALE = 1.2;-- Zone
 QUESTIE_NOTES_WORLD_MAP_ICON_SCALE = 0.75;--Full world shown
 QUESTIE_NOTES_CONTINENT_ICON_SCALE = 1;--Continent Shown
 QUESTIE_NOTES_MINIMAP_ICON_SCALE = 1.0;
-QUESTIE_NOTES_CLUSTERMUL_HACK = 28; -- higher values = more notes on the map
+QUESTIE_NOTES_CLUSTERMUL_HACK = 30; -- higher values = more notes on the map
 QuestieUsedNoteFrames = {};
 QuestieHandledQuests = {};
 QuestieCachedMonstersAndObjects = {};
@@ -624,6 +624,7 @@ end
 ---------------------------------------------------------------------------------------------------
 function Questie:CLEAR_ALL_NOTES()
 	Questie:debug_Print("CLEAR_NOTES");
+	MapCache_ClutterFix = {};
 	Astrolabe:RemoveAllMinimapIcons();
 	for k, v in pairs(QuestieUsedNoteFrames) do
 		--Questie:debug_Print("Hash:"..v.questHash,"Type:"..v.type);
