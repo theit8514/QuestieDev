@@ -233,14 +233,17 @@ function QuestieTracker:createOrGetTrackingButton(index)
                     Tooltip:SetOwner(this, "ANCHOR_LEFT");
                 end
                 local index = 0;
-                for k,v in pairs(Questie:SanitisedQuestLookup(QuestieHashMap[questHash].name)) do
-                    index = index + 1;
-                    if (index == 1) and (v[2] == questHash) and (k ~= "") then
-                        questOb = k;
-                    elseif (index > 0) and(v[2] == questHash) and (k ~= "") then
-                        questOb = k;
-                    elseif (index == 1) and (v[2] ~= questHash) and (k ~= "") then
-                        questOb = k;
+                local questInfo = QuestieHashMap[questHash]
+                if questInfo ~= nil then
+                    for k,v in pairs(Questie:SanitisedQuestLookup(questInfo.name)) do
+                        index = index + 1;
+                        if (index == 1) and (v[2] == questHash) and (k ~= "") then
+                            questOb = k;
+                        elseif (index > 0) and(v[2] == questHash) and (k ~= "") then
+                            questOb = k;
+                        elseif (index == 1) and (v[2] ~= questHash) and (k ~= "") then
+                            questOb = k;
+                        end
                     end
                 end
                 if (QuestieConfig.showToolTips == true) then

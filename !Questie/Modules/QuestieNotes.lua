@@ -390,22 +390,26 @@ function Questie:Tooltip(this, forceShow, bag, slot)
                     local lineIndex = Questie_TooltipCache[cacheKey]['lineCount']
                     if drawnQuestTitle == false then
                         local questInfo = QuestieHashMap[questHash]
-                        local colorString = "|c" .. QuestieTracker:GetDifficultyColor(questInfo.questLevel)
-                        local title = colorString
-                        title = title .. "[" .. questInfo.questLevel .. "] "
-                        title = title .. questInfo.name .. "|r"
-                        Questie_TooltipCache[cacheKey]['lines'][lineIndex] = {
-                            ['color'] = {1,1,1},
-                            ['data'] = " "
-                        }
-                        lineIndex = lineIndex + 1
-                        Questie_TooltipCache[cacheKey]['lines'][lineIndex] = {
-                            ['color'] = {1,1,1},
-                            ['data'] = title,
-                            ['wrap'] = false
-                        }
-                        lineIndex = lineIndex + 1
-                        drawnQuestTitle = true
+                        if questInfo == nil then
+                            Questie:debug_Print("questInfo is nil for quest id " .. QuestLogID);
+                        else
+                            local colorString = "|c" .. QuestieTracker:GetDifficultyColor(questInfo.questLevel)
+                            local title = colorString
+                            title = title .. "[" .. questInfo.questLevel .. "] "
+                            title = title .. questInfo.name .. "|r"
+                            Questie_TooltipCache[cacheKey]['lines'][lineIndex] = {
+                                ['color'] = {1,1,1},
+                                ['data'] = " "
+                            }
+                            lineIndex = lineIndex + 1
+                            Questie_TooltipCache[cacheKey]['lines'][lineIndex] = {
+                                ['color'] = {1,1,1},
+                                ['data'] = title,
+                                ['wrap'] = false
+                            }
+                            lineIndex = lineIndex + 1
+                            drawnQuestTitle = true
+                        end
                     end
                     local desc, type, done = QGet_QuestLogLeaderBoard(objectiveid)
                     if done then
